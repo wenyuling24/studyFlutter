@@ -9,7 +9,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'MoveListPageByLink.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'video/VideoApp.dart';
-import 'video/VideoPlayAndroid.dart';
 
 class _ContactCategory extends StatelessWidget {
   const _ContactCategory({Key key, this.icon, this.children}) : super(key: key);

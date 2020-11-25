@@ -33,8 +33,6 @@ dependencies:
   photo_view: ^0.4.0
   flutter_torrent_streamer: ^0.0.2
   url_launcher: ^5.7.10
-  video_exo_plugin:
-    path: video_exo_plugin
 
 dev_dependencies:
   flutter_test:
