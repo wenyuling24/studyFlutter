@@ -32,13 +32,15 @@ class MoveCenter {
 //  }
 // AVMOO 日本  https://avmoo.xyz
 // AVMOO 日本无码  https://avsox.net
+//https://avmoo.cyou
+// https://avmoo.com
   static const String baseUrl1 = "https://javzoo.com";
-  static const String baseUrl2 = "https://avmoo.com";
+  static const String baseUrl2 = "https://avmoo.cyou";
 
-  static bool isAvSox=false;
+  static bool isAvSox = true;
 
-  String getNowUrl(){
-    return isAvSox ? baseUrl2:baseUrl1;
+  String getNowUrl() {
+    return isAvSox ? baseUrl2 : baseUrl1;
   }
 
   Future getMove(String type, int page) async {
@@ -75,7 +77,6 @@ class MoveCenter {
 //  return JAViewer.SERVICE.get(this.link + "/page/" + page);
 
   Future getMoveByLink(String link, int page) async {
-
     String url = "$link/page/$page";
     print("请求Url:$url");
 
@@ -151,15 +152,14 @@ class MoveCenter {
 
   Future getActresses(int page) async {
     String url = "${getNowUrl()}/cn/actresses/page/$page";
-    print("请求av作者:"+url);
+    print("请求av作者:" + url);
     List<Actress> list = [];
     try {
       var client = new http.Client();
       var response = await client.get(url);
       var document = parse(response.body);
 
-
-      List<Element> boxs =  document.querySelectorAll("a[class*=avatar-box]");
+      List<Element> boxs = document.querySelectorAll("a[class*=avatar-box]");
       int lens = boxs.length;
       print("boxs$lens");
 //      print("boxs_size"+boxs.first.toString());
@@ -260,30 +260,56 @@ class MoveCenter {
   }
 
   Future<AVinfo> getAVG(String key) async {
-    AVinfo aVinfo=new AVinfo();
+    AVinfo aVinfo = new AVinfo();
     try {
-      String url = "http://api.rekonquer.com/psvs/search.php?kw=$key";
+      //https://btsow.surf/search/HNDB-180
+      // String url = "http://api.rekonquer.com/psvs/search.php?kw=$key";
+      // final string = "https://btsow.surf/search/HNDB-180";
+      String url = "https://btsow.surf/search/$key";
       print("请求地址:$url");
       var client = new http.Client();
       var response = await client.get(url);
-      print(response);
+      var document = parse(response.body);
+      Element info = document.body;
+      Element dataList = info.getElementsByClassName("data-list").first;
+      Element video = dataList.getElementsByTagName("a").first;
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> avg = json.decode(response.body);
-        bool success = avg["success"];
+      var link = video.attributes["href"];
+      var vid  = video.attributes["title"];
 
-        Map<String, dynamic> responseJson = avg["response"];
+      var responseLink = await client.get(link);
+      var documentLink = parse(responseLink.body);
+      Element infoLink = documentLink.body;
 
-        int total_videos = responseJson["total_videos"];
+      // print("infoLink ${infoLink.outerHtml}");
 
-        if (success && total_videos > 0) {
-          Map<String, dynamic> video = responseJson["videos"][0];
-          String vid = video["vid"];
-          String videoUrl = video["preview_video_url"];
-          aVinfo = new AVinfo.name(vid, videoUrl, "");
-          return aVinfo;
-        }
-      }
+      Element textarea = infoLink.getElementsByTagName("textarea").first;
+
+      var videoUrl = textarea.text;
+
+      print("vid: $vid  videoUrl: $videoUrl");
+
+      aVinfo = new AVinfo.name(vid, videoUrl, videoUrl);
+      return aVinfo;
+
+      // if (response.statusCode == 200) {
+      //   Map<String, dynamic> avg = json.decode(response.body);
+      //   bool success = avg["success"];
+      //
+      //   Map<String, dynamic> responseJson = avg["response"];
+      //
+      //   print("返回html avg $avg");
+      //
+      //   int total_videos = responseJson["total_videos"];
+      //
+      //   if (success && total_videos > 0) {
+      //     Map<String, dynamic> video = responseJson["videos"][0];
+      //     String vid = video["vid"];
+      //     String videoUrl = video["preview_video_url"];
+      //     aVinfo = new AVinfo.name(vid, videoUrl, "");
+      //     return aVinfo;
+      //   }
+      // }
     } catch (e) {
       print(e);
     }

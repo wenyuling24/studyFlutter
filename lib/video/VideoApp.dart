@@ -1,6 +1,6 @@
 
 
-import 'package:flutter_ijk/flutter_ijk.dart';
+import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 import 'package:flutter/material.dart';
 
 class VideoApp extends StatefulWidget {
@@ -14,7 +14,7 @@ class VideoApp extends StatefulWidget {
 }
 
 class _VideoAppState extends State<VideoApp> {
-  IjkPlayerController _controller;
+  IjkMediaController _controller;
 
   final String url;
   _VideoAppState(this.url);
@@ -23,13 +23,15 @@ class _VideoAppState extends State<VideoApp> {
   void initState() {
     super.initState();
     print("播放:$url");
-    _controller = IjkPlayerController.network(url)
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {
-          _controller.play();
-        });
-      });
+    _controller = IjkMediaController();
+    _controller.setNetworkDataSource(url,autoPlay: true);
+
+      // ..initialize().then((_) {
+      //   // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+      //   setState(() {
+      //     _controller.play();
+      //   });
+      // });
   }
 
   @override
@@ -38,23 +40,23 @@ class _VideoAppState extends State<VideoApp> {
       title: 'Video Demo',
       home: Scaffold(
         body: Center(
-          child: _controller.value.initialized
+          child: _controller.autoRotate
               ? AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: IjkPlayer(_controller),
+            aspectRatio: _controller.videoInfo.ratio,
+            child: IjkPlayer(mediaController: _controller),
           )
               : Container(),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             setState(() {
-              _controller.value.isPlaying
+              _controller.isPlaying
                   ? _controller.pause()
                   : _controller.play();
             });
           },
           child: Icon(
-            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+            _controller.isPlaying ? Icons.pause : Icons.play_arrow,
           ),
         ),
       ),

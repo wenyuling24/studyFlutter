@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/video/TorrentStreamerView.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'Move.dart';
 import 'MoveCenter.dart';
 import 'beans/MoveBase.dart';
@@ -7,7 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'MoveListPageByLink.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'video/VideoApp.dart';
-import 'video/VideoPlayAndrod.dart';
+import 'video/VideoPlayAndroid.dart';
 
 class _ContactCategory extends StatelessWidget {
   const _ContactCategory({Key key, this.icon, this.children}) : super(key: key);
@@ -23,7 +25,10 @@ class _ContactCategory extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-        style: Theme.of(context).textTheme.subhead,
+        style: Theme
+            .of(context)
+            .textTheme
+            .subhead,
         child: SafeArea(
           top: false,
           bottom: false,
@@ -215,11 +220,12 @@ class ContactsDemoState extends State<ContactsDemo> {
                 fit: BoxFit.cover,
                 width: 90,
                 height: 90,
-                errorWidget: (context, url, error) => new Image.asset(
-                      "images/def_avatar.png",
-                      width: 90,
-                      height: 90,
-                    ),
+                errorWidget: (context, url, error) =>
+                new Image.asset(
+                  "images/def_avatar.png",
+                  width: 90,
+                  height: 90,
+                ),
               ),
               Text(avt.name.trim(),
                   maxLines: 1,
@@ -255,9 +261,7 @@ class ContactsDemoState extends State<ContactsDemo> {
     return windets;
   }
 
-  List<Widget> buildTags(
-    BuildContext context,
-  ) {
+  List<Widget> buildTags(BuildContext context,) {
     List<Widget> windets = [];
     if (moveDetailInfo == null) return windets;
     if (moveDetailInfo.genres != null && moveDetailInfo.genres.length > 0) {
@@ -324,8 +328,8 @@ class ContactsDemoState extends State<ContactsDemo> {
     return windets;
   }
 
-  List<Widget> creatScreenShootItems(
-      BuildContext context, List<Screenshot> screenshots) {
+  List<Widget> creatScreenShootItems(BuildContext context,
+      List<Screenshot> screenshots) {
     print("缩率图:${screenshots.length}");
     List<Widget> windets = [];
     screenshots.forEach((e) {
@@ -344,13 +348,14 @@ class ContactsDemoState extends State<ContactsDemo> {
             fit: BoxFit.cover,
             width: 56,
             height: 56,
-            errorWidget: (context, url, error) => new Image.asset(
-                  "images/def_avatar.png",
-                  width: 56,
-                  height: 56,
-                ),
+            errorWidget: (context, url, error) =>
+            new Image.asset(
+              "images/def_avatar.png",
+              width: 56,
+              height: 56,
+            ),
             placeholder: (content, url) =>
-                new Container(color: Colors.grey, width: 56, height: 56),
+            new Container(color: Colors.grey, width: 56, height: 56),
           ),
         ),
       ));
@@ -358,25 +363,32 @@ class ContactsDemoState extends State<ContactsDemo> {
     return windets;
   }
 
-  Future doPlay(BuildContext context, String vid) async {
-    Map<String, dynamic> args = {
-      "vid": vid,
-    };
-    await platform.invokeMethod("getsign", args).then((url) {
-//      Navigator.push(
-//          context, MaterialPageRoute(builder: (context) => VideoPlayAndrod(url)));
-    });
+  Future doPlay(BuildContext context, String url) async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                TorrentStreamerView(url))); //VideoPlayAndrod(url)
+
+    // Map<String, dynamic> args = {
+    //   "vid": vid,
+    // };
+    // await platform.invokeMethod("getsign", args).then((url) {
+    //   Navigator.push(
+    //       context, MaterialPageRoute(builder: (context) => VideoPlayAndriod(url)));//VideoPlayAndrod(url)
+    // });
   }
 
   Future doPreview(BuildContext context, String url) async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => VideoApp(url)));
-//    Map<String, dynamic> args = {
-//      "url": url,
-//    };
-//    await platform.invokeMethod("preview", args).then((url) {
-//      Navigator.push(context, MaterialPageRoute(builder: (context)=>VideoPlay(url)));
-//    });
+    // Map<String, dynamic> args = {
+    //   "url": url,
+    // };
+    // await platform.invokeMethod("preview", args).then((url) {
+    //   Navigator.push(
+    //       context, MaterialPageRoute(builder: (context) => VideoApp(url)));
+    // });
   }
 
   Widget buildVideoUrlPlay(BuildContext context) {
@@ -394,9 +406,17 @@ class ContactsDemoState extends State<ContactsDemo> {
       ),
       onPressed: aVinfo.videoId == null
           ? null
-          : () {
-              doPlay(context, aVinfo.videoId);
-            },
+          : ()
+      // async {
+      //     if (await canLaunch(aVinfo.playUrl)) {
+      //       await launch(aVinfo.playUrl);
+      //     } else {
+      //       throw 'Could not launch ${aVinfo.playUrl}';
+      //     }
+      //   },
+      {
+        doPlay(context, aVinfo.playUrl);
+      },
     );
 
     return Row(
@@ -414,6 +434,7 @@ class ContactsDemoState extends State<ContactsDemo> {
                   color: color,
                 ),
                 onPressed: () {
+                  // print("播放:${aVinfo.previewUrl}");
                   doPreview(context, aVinfo.previewUrl);
                 }),
           ),
@@ -435,7 +456,9 @@ class ContactsDemoState extends State<ContactsDemo> {
       data: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.pink,
-        platform: Theme.of(context).platform,
+        platform: Theme
+            .of(context)
+            .platform,
       ),
       child: Scaffold(
         body: CustomScrollView(
@@ -459,20 +482,20 @@ class ContactsDemoState extends State<ContactsDemo> {
                     });
                   },
                   itemBuilder: (BuildContext context) =>
-                      <PopupMenuItem<AppBarBehavior>>[
-                        const PopupMenuItem<AppBarBehavior>(
-                            value: AppBarBehavior.normal,
-                            child: Text('App bar scrolls away')),
-                        const PopupMenuItem<AppBarBehavior>(
-                            value: AppBarBehavior.pinned,
-                            child: Text('App bar stays put')),
-                        const PopupMenuItem<AppBarBehavior>(
-                            value: AppBarBehavior.floating,
-                            child: Text('App bar floats')),
-                        const PopupMenuItem<AppBarBehavior>(
-                            value: AppBarBehavior.snapping,
-                            child: Text('App bar snaps')),
-                      ],
+                  <PopupMenuItem<AppBarBehavior>>[
+                    const PopupMenuItem<AppBarBehavior>(
+                        value: AppBarBehavior.normal,
+                        child: Text('App bar scrolls away')),
+                    const PopupMenuItem<AppBarBehavior>(
+                        value: AppBarBehavior.pinned,
+                        child: Text('App bar stays put')),
+                    const PopupMenuItem<AppBarBehavior>(
+                        value: AppBarBehavior.floating,
+                        child: Text('App bar floats')),
+                    const PopupMenuItem<AppBarBehavior>(
+                        value: AppBarBehavior.snapping,
+                        child: Text('App bar snaps')),
+                  ],
                 ),
               ],
               flexibleSpace: FlexibleSpaceBar(
@@ -485,11 +508,12 @@ class ContactsDemoState extends State<ContactsDemo> {
                           ? move.coverUrl
                           : moveDetailInfo.coverUrl,
                       height: 256,
-                      placeholder: (context,url)=>CachedNetworkImage(
-                        imageUrl: move.coverUrl,
-                        fit: BoxFit.scaleDown,
-                        height: 256,
-                      ),
+                      placeholder: (context, url) =>
+                          CachedNetworkImage(
+                            imageUrl: move.coverUrl,
+                            fit: BoxFit.scaleDown,
+                            height: 256,
+                          ),
                       fit: BoxFit.fill,
                     ),
                     // This gradient ensures that the toolbar icons are distinct
@@ -589,12 +613,8 @@ class _PhotoViewGalleryList extends State<PhotoViewGalleryList> {
     // TODO: implement build
 
     PhotoViewGallery child =
-        PhotoViewGallery(pageController: controller, pageOptions: createView());
+    PhotoViewGallery(pageController: controller, pageOptions: createView());
 
     return Container(child: child);
   }
 }
-
-
-
-

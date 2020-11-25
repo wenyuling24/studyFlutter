@@ -10,7 +10,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -21,18 +21,20 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
-  http: ^0.12.0+2
-  html: ^0.14.0+2
-  flutter_cache_manager: ^0.3.2
-  cached_network_image: ^0.8.0
-  #  video_player: ^0.8.0
-  flutter_ijk:
-    git:
-      url: https://github.com/jadennn/flutter_ijk
+  http: ^0.12.2
+  html: ^0.14.0+4
+#  beautifulsoup: ^0.0.1
+  flutter_cache_manager: ^2.0.0
+  cached_network_image: ^2.3.3
+#  video_player: ^1.0.1
+#  exoplayer: ^0.0.1
+  flutter_ijkplayer: ^0.3.5+1
   event_bus: ^1.1.0
   photo_view: ^0.4.0
+  flutter_torrent_streamer: ^0.0.2
+  url_launcher: ^5.7.10
   video_exo_plugin:
-              path: video_exo_plugin
+    path: video_exo_plugin
 
 dev_dependencies:
   flutter_test:

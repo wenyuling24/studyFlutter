@@ -58,7 +58,7 @@ class AVinfo{
 
   String videoId;
   String previewUrl;
-  String PlayUrl;
-  AVinfo.name(this.videoId, this.previewUrl, this.PlayUrl);
+  String playUrl;
+  AVinfo.name(this.videoId, this.previewUrl, this.playUrl);
   AVinfo();
 }
