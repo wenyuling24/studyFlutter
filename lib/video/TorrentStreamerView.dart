@@ -24,6 +24,14 @@ class _TorrentStreamerViewState extends State<TorrentStreamerView> {
     super.initState();
     print("播放:$url");
     _addTorrentListeners();
+    _startDownload();
+  }
+
+  @override
+  void dispose() {
+    TorrentStreamer.stop();
+    TorrentStreamer.removeEventListeners();
+    super.dispose();
   }
 
   void _addTorrentListeners() {
@@ -37,6 +45,7 @@ class _TorrentStreamerViewState extends State<TorrentStreamerView> {
   }
 
   Future<void> _startDownload() async {
+    await TorrentStreamer.stop();
     await TorrentStreamer.start(url);
   }
 

@@ -272,6 +272,7 @@ class ContactsDemoState extends State<ContactsDemo> {
         height: 72,
         child: Center(
           child: new Text("没有标签分类"),
+
         ),
       ));
     }

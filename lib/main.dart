@@ -11,7 +11,8 @@ import 'package:flutter_torrent_streamer/flutter_torrent_streamer.dart';
 // void main() => runApp(new MyApp());
 void main() async {
 //  final Directory saveDir = await getExternalStorageDirectory();
-  TorrentStreamer.init();
+  WidgetsFlutterBinding.ensureInitialized();
+  await TorrentStreamer.init();
   runApp(MyApp());
 }
 
